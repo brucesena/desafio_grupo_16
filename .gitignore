@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Build e output do projeto
+www/
+dist/
+coverage/
+.angular/
+
+# Capacitor / Android / iOS
+.capacitor/
+android/
+ios/
+
+# Arquivos de ambiente e configuração local
+.env
+.env.*
+src/environments/environment.local.ts
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo

@@ -1,0 +1,7 @@
+{
+  "name": "Suporte e Vendas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
