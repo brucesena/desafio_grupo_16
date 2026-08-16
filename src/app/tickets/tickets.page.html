@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ status === 'abertos' ? 'Tickets abertos' : status === 'em-andamento' ? 'Tickets em andamento' : 'Tickets fechados' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="tickets-content">
+  <div class="summary-card">
+    <h2>{{ getFilteredTickets().length }} tickets</h2>
+    <p>Visualizando {{ status === 'abertos' ? 'tickets abertos' : status === 'em-andamento' ? 'tickets em andamento' : 'tickets fechados' }}.</p>
+  </div>
+
+  <ion-list lines="none" class="tickets-list">
+    @for (ticket of getFilteredTickets(); track ticket.id) {
+      <ion-item class="ticket-item">
+        <ion-label>
+          <h3>{{ ticket.title }}</h3>
+          <p>ID: {{ ticket.id }}</p>
+        </ion-label>
+      </ion-item>
+    }
+  </ion-list>
+</ion-content>

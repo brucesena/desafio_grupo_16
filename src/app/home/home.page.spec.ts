@@ -24,4 +24,17 @@ describe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should expose the home menu with ticket counts', () => {
+    const titles = component.menuOptions.map(option => option.title);
+
+    expect(titles).toContain('Criar usuários');
+    expect(titles).toContain('Tickets abertos');
+    expect(titles).toContain('Tickets em andamento');
+    expect(titles).toContain('Tickets fechados');
+
+    expect(component.menuOptions.find(option => option.title === 'Tickets abertos')?.count).toBe(3);
+    expect(component.menuOptions.find(option => option.title === 'Tickets em andamento')?.count).toBe(2);
+    expect(component.menuOptions.find(option => option.title === 'Tickets fechados')?.count).toBe(4);
+  });
 });

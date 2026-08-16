@@ -1,0 +1,44 @@
+.tickets-content {
+  --background: #f5f7fb;
+}
+
+.summary-card {
+  margin: 20px 16px 12px;
+  padding: 18px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #60a5fa 100%);
+  border-radius: 18px;
+  color: white;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 6px 0 0;
+    opacity: 0.9;
+  }
+}
+
+.tickets-list {
+  margin: 0 16px 20px;
+  background: transparent;
+}
+
+.ticket-item {
+  --background: #ffffff;
+  --border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+
+  h3 {
+    margin: 0;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #6b7280;
+  }
+}
