@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+
+import { SupabaseService } from '../supabase.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -21,18 +24,44 @@ import { IonicModule } from '@ionic/angular';
         <ion-card-content>
           <ion-item>
             <ion-label position="floating">Nome</ion-label>
-            <ion-input></ion-input>
+            <ion-input [(ngModel)]="nome"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">E-mail</ion-label>
-            <ion-input type="email"></ion-input>
+            <ion-input type="email" [(ngModel)]="email"></ion-input>
           </ion-item>
-          <ion-button expand="block" class="ion-margin-top">Salvar</ion-button>
+          <ion-button expand="block" class="ion-margin-top" (click)="salvarUsuario()">Salvar</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
   `,
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, FormsModule],
 })
-export class UsuariosPage {}
+export class UsuariosPage {
+  public nome = '';
+  public email = '';
+
+  constructor(private supabaseService: SupabaseService) {}
+
+  async salvarUsuario() {
+    if (!this.nome || !this.email) {
+      console.warn('Preencha nome e e-mail antes de salvar.');
+      return;
+    }
+
+    const { error } = await this.supabaseService.createUser({
+      nome: this.nome,
+      email: this.email,
+    });
+
+    if (error) {
+      console.error('Erro ao criar usuário:', error);
+      return;
+    }
+
+    this.nome = '';
+    this.email = '';
+    console.log('Usuário criado com sucesso.');
+  }
+}

@@ -1,12 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
 
-interface Ticket {
-  id: number;
-  title: string;
-  status: 'aberto' | 'em-andamento' | 'fechado';
-}
+import { SupabaseService, TicketRecord, TicketStatus } from '../supabase.service';
 
 @Component({
   selector: 'app-tickets',
@@ -14,39 +10,57 @@ interface Ticket {
   styleUrls: ['./tickets.page.scss'],
   standalone: false,
 })
-export class TicketsPage {
+export class TicketsPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private supabaseService = inject(SupabaseService);
 
   public status: string = 'abertos';
-  public tickets: Ticket[] = [
-    { id: 1, title: 'Ticket 1', status: 'aberto' },
-    { id: 2, title: 'Ticket 2', status: 'aberto' },
-    { id: 3, title: 'Ticket 3', status: 'aberto' },
-    { id: 4, title: 'Ticket 4', status: 'em-andamento' },
-    { id: 5, title: 'Ticket 5', status: 'em-andamento' },
-    { id: 6, title: 'Ticket 6', status: 'fechado' },
-    { id: 7, title: 'Ticket 7', status: 'fechado' },
-    { id: 8, title: 'Ticket 8', status: 'fechado' },
-    { id: 9, title: 'Ticket 9', status: 'fechado' },
-  ];
+  public tickets: TicketRecord[] = [];
 
-  constructor() {
+  ngOnInit() {
     const statusFromRoute = this.route.snapshot.paramMap.get('status');
     if (statusFromRoute) {
       this.status = statusFromRoute;
     }
+
+    this.loadTickets();
   }
 
-  getFilteredTickets(): Ticket[] {
-    switch (this.status) {
-      case 'abertos':
-        return this.tickets.filter(ticket => ticket.status === 'aberto');
-      case 'em-andamento':
-        return this.tickets.filter(ticket => ticket.status === 'em-andamento');
-      case 'fechados':
-        return this.tickets.filter(ticket => ticket.status === 'fechado');
-      default:
-        return this.tickets;
+  async loadTickets() {
+    try {
+      const statusMap: Record<string, TicketStatus> = {
+        abertos: 'aberto',
+        'em-andamento': 'em-andamento',
+        fechados: 'fechado',
+      };
+
+      if (this.status === 'todos') {
+        const { data, error } = await this.supabaseService.getTickets();
+
+        if (error) {
+          console.error('Erro ao buscar todos os tickets:', error);
+          return;
+        }
+
+        this.tickets = data ?? [];
+        return;
+      }
+
+      const selectedStatus = statusMap[this.status] ?? 'aberto';
+      const { data, error } = await this.supabaseService.getTicketsByStatus(selectedStatus);
+
+      if (error) {
+        console.error('Erro ao buscar tickets:', error);
+        return;
+      }
+
+      this.tickets = data ?? [];
+    } catch (error) {
+      console.error('Erro ao carregar tickets do Supabase:', error);
     }
+  }
+
+  getFilteredTickets(): TicketRecord[] {
+    return this.tickets;
   }
 }

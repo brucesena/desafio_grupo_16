@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      {{ status === 'abertos' ? 'Tickets abertos' : status === 'em-andamento' ? 'Tickets em andamento' : 'Tickets fechados' }}
+      {{ status === 'todos' ? 'Todos os tickets' : status === 'abertos' ? 'Tickets abertos' : status === 'em-andamento' ? 'Tickets em andamento' : 'Tickets fechados' }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,15 +12,20 @@
 <ion-content [fullscreen]="true" class="tickets-content">
   <div class="summary-card">
     <h2>{{ getFilteredTickets().length }} tickets</h2>
-    <p>Visualizando {{ status === 'abertos' ? 'tickets abertos' : status === 'em-andamento' ? 'tickets em andamento' : 'tickets fechados' }}.</p>
+    <p>Visualizando {{ status === 'todos' ? 'todos os tickets' : status === 'abertos' ? 'tickets abertos' : status === 'em-andamento' ? 'tickets em andamento' : 'tickets fechados' }}.</p>
   </div>
 
   <ion-list lines="none" class="tickets-list">
     @for (ticket of getFilteredTickets(); track ticket.id) {
       <ion-item class="ticket-item">
         <ion-label>
-          <h3>{{ ticket.title }}</h3>
-          <p>ID: {{ ticket.id }}</p>
+          <h3>{{ ticket.titulo }}</h3>
+          <p>Categoria: {{ ticket.categoria || 'Sem categoria' }}</p>
+          <p>Cliente: {{ ticket.nome_cliente || 'Sem nome' }}</p>
+          <p>Telefone: {{ ticket.telefone_cliente || 'Sem telefone' }}</p>
+          <p>Status: {{ ticket.status }}</p>
+          <p>Atendente: {{ ticket.atendente_id ?? 'Sem atendente' }}</p>
+          <p>Data: {{ ticket.created_at | date: 'dd/MM/yyyy HH:mm' }}</p>
         </ion-label>
       </ion-item>
     }
