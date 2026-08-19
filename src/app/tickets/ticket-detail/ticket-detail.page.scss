@@ -1,0 +1,172 @@
+.detail-content {
+  --background: #f4f5f8;
+}
+
+// Loading
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 12px;
+  color: var(--ion-color-medium);
+
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// Status banner
+.status-banner {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px 0;
+
+  .status-badge {
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Cartão de informações
+.info-card {
+  margin: 8px 16px 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  ion-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  ion-card-subtitle {
+    margin-top: 4px;
+  }
+}
+
+.detail-list {
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+
+    ion-icon {
+      margin-right: 12px;
+      font-size: 1.2rem;
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      color: var(--ion-color-medium);
+      margin-bottom: 2px;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--ion-color-dark);
+    }
+  }
+}
+
+// Seção de ações
+.actions-section {
+  padding: 20px 16px;
+
+  .actions-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ion-color-medium-shade);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+
+  ion-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+    text-align: left;
+  }
+
+  &:active {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  // Comentar — azul suave
+  &--comment {
+    background: #e8f0fe;
+    color: #1a73e8;
+  }
+
+  // Contatar usuário — verde suave
+  &--contact {
+    background: #e6f4ea;
+    color: #1e8e3e;
+  }
+
+  // Mover atendente — laranja suave
+  &--move {
+    background: #fef3e2;
+    color: #e37400;
+  }
+
+  // Encerrar — vermelho suave
+  &--close {
+    background: #fce8e6;
+    color: #d93025;
+  }
+}
+
+// Estado vazio
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 12px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 64px;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}

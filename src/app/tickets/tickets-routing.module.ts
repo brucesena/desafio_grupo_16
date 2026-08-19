@@ -7,6 +7,10 @@ const routes: Routes = [
     path: ':status',
     component: TicketsPage,
   },
+  {
+    path: 'ticket-detail',
+    loadChildren: () => import('./ticket-detail/ticket-detail.module').then( m => m.TicketDetailPageModule)
+  },
 ];
 
 @NgModule({

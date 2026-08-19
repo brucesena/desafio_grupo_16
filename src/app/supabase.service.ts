@@ -72,6 +72,22 @@ export class SupabaseService {
     return counts;
   }
 
+  getTicketById(id: number) {
+    return this.supabase.from('ticket').select('*').eq('id', id).single();
+  }
+
+  updateTicketStatus(id: number, status: TicketStatus) {
+    return this.supabase.from('ticket').update({ status }).eq('id', id);
+  }
+
+  updateTicketAtendente(id: number, atendente_id: number) {
+    return this.supabase.from('ticket').update({ atendente_id }).eq('id', id);
+  }
+
+  addComment(ticketId: number, comentario: string) {
+    return this.supabase.from('comentarios').insert([{ ticket_id: ticketId, texto: comentario }]);
+  }
+
   getUsers() {
     return this.supabase.from('usuarios').select('*');
   }

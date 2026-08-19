@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./tickets/tickets.module').then( m => m.TicketsPageModule)
   },
   {
+    path: 'ticket-detail/:id',
+    loadChildren: () => import('./tickets/ticket-detail/ticket-detail.module').then(m => m.TicketDetailPageModule)
+  },
+  {
     path: 'message/:id',
     loadChildren: () => import('./view-message/view-message.module').then( m => m.ViewMessagePageModule)
   },

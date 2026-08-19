@@ -1,0 +1,120 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalhes do Ticket</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="detail-content">
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Carregando ticket...</p>
+    </div>
+  }
+
+  <!-- Conteúdo -->
+  @if (!isLoading && ticket) {
+    <!-- Badge de status -->
+    <div class="status-banner">
+      <ion-badge [color]="getStatusColor(ticket.status)" class="status-badge">
+        {{ getStatusLabel(ticket.status) }}
+      </ion-badge>
+    </div>
+
+    <!-- Informações do ticket -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>{{ ticket.titulo }}</ion-card-title>
+        <ion-card-subtitle>{{ ticket.categoria || 'Sem categoria' }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list lines="none" class="detail-list">
+          <ion-item>
+            <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Cliente</p>
+              <h3>{{ ticket.nome_cliente || 'Sem nome' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Telefone</p>
+              <h3>{{ ticket.telefone_cliente || 'Sem telefone' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="headset-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Atendente</p>
+              <h3>{{ ticket.atendente_id != null ? 'Atendente #' + ticket.atendente_id : 'Sem atendente' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Aberto em</p>
+              <h3>{{ ticket.created_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botões de ação -->
+    <div class="actions-section">
+      <h2 class="actions-title">Ações</h2>
+
+      <div class="action-buttons">
+
+        <!-- Comentar -->
+        <button class="action-btn action-btn--comment" (click)="abrirComentario()">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          <span>Comentar</span>
+        </button>
+
+        <!-- Contatar usuário -->
+        <button class="action-btn action-btn--contact" (click)="contatarUsuario()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Contatar usuário</span>
+        </button>
+
+        <!-- Mover para outro atendente -->
+        <button class="action-btn action-btn--move" (click)="abrirMoverAtendente()">
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+          <span>Mover para outro atendente</span>
+        </button>
+
+        <!-- Encerrar -->
+        <button
+          class="action-btn action-btn--close"
+          (click)="confirmarEncerramento()"
+          [disabled]="ticket.status === 'fechado'"
+        >
+          <ion-icon name="checkmark-done-outline"></ion-icon>
+          <span>{{ ticket.status === 'fechado' ? 'Ticket encerrado' : 'Encerrar ticket' }}</span>
+        </button>
+
+      </div>
+    </div>
+  }
+
+  <!-- Ticket não encontrado -->
+  @if (!isLoading && !ticket) {
+    <div class="empty-state">
+      <ion-icon name="alert-circle-outline" color="medium"></ion-icon>
+      <p>Ticket não encontrado.</p>
+      <ion-button fill="outline" routerLink="/home">Voltar ao início</ion-button>
+    </div>
+  }
+
+</ion-content>

@@ -17,7 +17,7 @@
 
   <ion-list lines="none" class="tickets-list">
     @for (ticket of getFilteredTickets(); track ticket.id) {
-      <ion-item class="ticket-item">
+      <ion-item class="ticket-item" button detail [routerLink]="['/ticket-detail', ticket.id]">
         <ion-label>
           <h3>{{ ticket.titulo }}</h3>
           <p>Categoria: {{ ticket.categoria || 'Sem categoria' }}</p>
