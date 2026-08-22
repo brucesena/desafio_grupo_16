@@ -115,59 +115,6 @@ export class TicketDetailPage implements OnInit {
     }
   }
 
-  // ─── Mover para outro atendente ──────────────────────────────────────────────
-
-  async abrirMoverAtendente() {
-    const loading = await this.showLoading('Carregando atendentes...');
-    const { data: usuarios, error } = await this.supabaseService.getUsers();
-    loading.dismiss();
-
-    if (error || !usuarios?.length) {
-      await this.showToast('Não foi possível carregar os atendentes.', 'danger');
-      return;
-    }
-
-    const inputs = (usuarios as UsuarioRecord[]).map((u) => ({
-      type: 'radio' as const,
-      label: u.nome ?? `Atendente #${u.id}`,
-      value: u.id,
-      checked: u.id === this.ticket?.atendente_id,
-    }));
-
-    const alert = await this.alertCtrl.create({
-      header: 'Mover para outro atendente',
-      inputs,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Confirmar',
-          handler: async (atendenteId) => {
-            if (!atendenteId) {
-              await this.showToast('Selecione um atendente.', 'warning');
-              return false;
-            }
-            await this.moverAtendente(atendenteId);
-            return true;
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
-
-  private async moverAtendente(atendenteId: number) {
-    if (!this.ticket?.id) return;
-    const loading = await this.showLoading('Atualizando atendente...');
-    const { error } = await this.supabaseService.updateTicketAtendente(this.ticket.id, atendenteId);
-    loading.dismiss();
-    if (error) {
-      await this.showToast('Erro ao mover ticket.', 'danger');
-    } else {
-      this.ticket = { ...this.ticket, atendente_id: atendenteId };
-      await this.showToast('Ticket movido com sucesso!', 'success');
-    }
-  }
-
   // ─── Contatar usuário ────────────────────────────────────────────────────────
 
   async contatarUsuario() {
