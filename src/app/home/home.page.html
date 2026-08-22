@@ -3,6 +3,11 @@
     <ion-title>
       Cases Notify!
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirmarLogout()" aria-label="Sair">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -12,7 +17,7 @@
   </ion-refresher>
 
   <div class="welcome-card">
-    <h1>Menu inicial</h1>
+    <h1>Olá, {{ nomeAtendente }}!</h1>
     <p>Controle os tickets do sistema.</p>
   </div>
 

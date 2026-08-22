@@ -1,0 +1,74 @@
+<ion-content [fullscreen]="true" class="login-content">
+
+  <div class="login-wrapper">
+
+    <!-- Logo / Cabeçalho -->
+    <div class="login-header">
+      <div class="logo-container">
+        <ion-icon name="headset-outline" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="app-name">Cases Notify</h1>
+      <p class="app-subtitle">Painel do atendente</p>
+    </div>
+
+    <!-- Formulário -->
+    <div class="login-form">
+
+      <!-- E-mail -->
+      <div class="field-group" [class.field-error]="emailInvalido">
+        <label class="field-label">E-mail</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <input
+            type="email"
+            class="field-input"
+            placeholder="seu@email.com"
+            [(ngModel)]="email"
+            (keyup.enter)="entrar()"
+            autocomplete="email"
+          />
+        </div>
+        @if (emailInvalido) {
+          <span class="error-msg">Informe o e-mail.</span>
+        }
+      </div>
+
+      <!-- Senha -->
+      <div class="field-group" [class.field-error]="senhaInvalida">
+        <label class="field-label">Senha</label>
+        <div class="input-wrapper">
+          <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+          <input
+            [type]="senhaVisivel ? 'text' : 'password'"
+            class="field-input"
+            placeholder="••••••••"
+            [(ngModel)]="senha"
+            (keyup.enter)="entrar()"
+            autocomplete="current-password"
+          />
+          <button type="button" class="toggle-senha" (click)="toggleSenha()" aria-label="Mostrar ou ocultar senha">
+            <ion-icon [name]="senhaVisivel ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+        @if (senhaInvalida) {
+          <span class="error-msg">Informe a senha.</span>
+        }
+      </div>
+
+      <!-- Botão entrar -->
+      <button class="btn-entrar" (click)="entrar()">
+        Entrar
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+
+      <!-- Link cadastro -->
+      <div class="cadastro-link">
+        <span>Não tem conta?</span>
+        <button type="button" class="btn-link" (click)="abrirCadastro()">Criar conta</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

@@ -23,6 +23,15 @@ export interface UsuarioRecord {
   criado_em?: string;
 }
 
+export interface AtendenteRecord {
+  id?: number;
+  nome?: string;
+  email?: string;
+  senha?: string;
+  telefone?: string;
+  criado_em?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -34,6 +43,21 @@ export class SupabaseService {
       environment.supabaseUrl,
       environment.supabaseKey
     );
+  }
+
+  async login(email: string, senha: string): Promise<AtendenteRecord | null> {
+    const { data, error } = await this.supabase
+      .from('atendente')
+      .select('*')
+      .eq('email', email)
+      .eq('senha', senha)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return data as AtendenteRecord;
   }
 
   getTickets() {
@@ -86,6 +110,19 @@ export class SupabaseService {
 
   addComment(ticketId: number, comentario: string) {
     return this.supabase.from('comentarios').insert([{ ticket_id: ticketId, texto: comentario }]);
+  }
+
+  async cadastrarAtendente(atendente: Pick<AtendenteRecord, 'nome' | 'email' | 'senha' | 'telefone'>) {
+    return this.supabase.from('atendente').insert([atendente]).select().single();
+  }
+
+  async emailAtendenteExiste(email: string): Promise<boolean> {
+    const { data } = await this.supabase
+      .from('atendente')
+      .select('id')
+      .eq('email', email)
+      .single();
+    return !!data;
   }
 
   getUsers() {

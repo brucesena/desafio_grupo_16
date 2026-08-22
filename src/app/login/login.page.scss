@@ -1,0 +1,197 @@
+.login-content {
+  --background: linear-gradient(160deg, #1a73e8 0%, #0d47a1 100%);
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 32px 24px;
+  box-sizing: border-box;
+}
+
+// ── Cabeçalho ────────────────────────────────────────────────────
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.logo-container {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  backdrop-filter: blur(4px);
+}
+
+.logo-icon {
+  font-size: 40px;
+  color: #fff;
+}
+
+.app-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+// ── Formulário ───────────────────────────────────────────────────
+.login-form {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.field-error .input-wrapper {
+    border-color: #d93025;
+    background: #fff5f5;
+  }
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3c4043;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f4f5f8;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 0 14px;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: #1a73e8;
+    background: #fff;
+  }
+}
+
+.input-icon {
+  font-size: 1.1rem;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.field-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 1rem;
+  color: #202124;
+  outline: none;
+
+  &::placeholder {
+    color: #aaa;
+  }
+}
+
+.toggle-senha {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: #888;
+  font-size: 1.1rem;
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.error-msg {
+  font-size: 0.78rem;
+  color: #d93025;
+  padding-left: 4px;
+}
+
+// ── Botão entrar ─────────────────────────────────────────────────
+.btn-entrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 4px;
+
+  ion-icon {
+    font-size: 1.1rem;
+  }
+
+  &:active {
+    background: #1557b0;
+    transform: scale(0.98);
+  }
+}
+
+// ── Link de cadastro ─────────────────────────────────────────────
+.cadastro-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.btn-link {
+  background: transparent;
+  border: none;
+  color: #1a73e8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:active {
+    opacity: 0.7;
+  }
+}

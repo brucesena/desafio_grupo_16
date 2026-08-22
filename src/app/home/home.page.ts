@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RefresherCustomEvent } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { RefresherCustomEvent, AlertController } from '@ionic/angular';
+import { inject } from '@angular/core';
 
 import { SupabaseService } from '../supabase.service';
+import { AuthService } from '../auth.service';
 
 interface MenuOption {
   title: string;
@@ -17,7 +20,14 @@ interface MenuOption {
   standalone: false,
 })
 export class HomePage implements OnInit {
-  private supabaseService = new SupabaseService();
+  private supabaseService = inject(SupabaseService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private alertCtrl = inject(AlertController);
+
+  get nomeAtendente(): string {
+    return this.authService.getAtendente()?.nome ?? 'Atendente';
+  }
 
   public menuOptions: MenuOption[] = [
     {
@@ -84,5 +94,24 @@ export class HomePage implements OnInit {
       (ev as RefresherCustomEvent).detail.complete();
       this.loadTicketCounts();
     }, 3000);
+  }
+
+  async confirmarLogout() {
+    const alert = await this.alertCtrl.create({
+      header: 'Sair',
+      message: 'Deseja encerrar a sessão?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Sair',
+          cssClass: 'alert-button-danger',
+          handler: () => {
+            this.authService.encerrarSessao();
+            this.router.navigateByUrl('/login', { replaceUrl: true });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }
