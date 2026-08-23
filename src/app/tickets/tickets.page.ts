@@ -47,7 +47,7 @@ export class TicketsPage implements OnInit {
       }
 
       const selectedStatus = statusMap[this.status] ?? 'em-aberto';
-      const { data, error } = await this.supabaseService.getTicketsByStatus(selectedStatus);
+      const { data, error } = await this.supabaseService.getTickets(selectedStatus);
 
       if (error) {
         console.error('Erro ao buscar tickets:', error);

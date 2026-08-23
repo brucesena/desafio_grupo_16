@@ -60,12 +60,11 @@ export class SupabaseService {
     return data as AtendenteRecord;
   }
 
-  getTickets() {
-    return this.supabase.from('ticket').select('*');
-  }
-
-  getTicketsByStatus(status: TicketStatus) {
-    return this.supabase.from('ticket').select('*').eq('status', status);
+  getTickets(status?: TicketStatus) {
+    if (status){
+      return this.supabase.from('ticket').select('*').eq('status', status).order('created_at');
+    }
+    return this.supabase.from('ticket').select('*').order('created_at');
   }
 
   async getTicketCounts(): Promise<Record<string, number>> {
