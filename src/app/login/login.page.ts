@@ -108,7 +108,7 @@ export class LoginPage {
         {
           text: 'Cadastrar',
           handler: (dados) => {
-            // Retorna false para manter o alert aberto em caso de erro
+            // Retorna false para manter o alert novo em caso de erro
             return this.processarCadastro(dados);
           },
         },

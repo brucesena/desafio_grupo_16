@@ -29,11 +29,11 @@ describe('HomePage', () => {
     const titles = component.menuOptions.map(option => option.title);
 
     expect(titles).toContain('Criar usuários');
-    expect(titles).toContain('Tickets abertos');
+    expect(titles).toContain('Tickets novos');
     expect(titles).toContain('Tickets em andamento');
     expect(titles).toContain('Tickets fechados');
 
-    expect(component.menuOptions.find(option => option.title === 'Tickets abertos')?.count).toBe(3);
+    expect(component.menuOptions.find(option => option.title === 'Tickets novos')?.count).toBe(3);
     expect(component.menuOptions.find(option => option.title === 'Tickets em andamento')?.count).toBe(2);
     expect(component.menuOptions.find(option => option.title === 'Tickets fechados')?.count).toBe(4);
   });

@@ -14,7 +14,7 @@ export class TicketsPage implements OnInit {
   private route = inject(ActivatedRoute);
   private supabaseService = inject(SupabaseService);
 
-  public status: string = 'abertos';
+  public status: string = 'novos';
   public tickets: TicketRecord[] = [];
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class TicketsPage implements OnInit {
   loadTickets = async () => {
     try {
       const statusMap: Record<string, TicketStatus> = {
-        abertos: 'em-aberto',
+        novos: 'novo',
         'em-andamento': 'em-andamento',
         fechados: 'fechado',
       };
@@ -46,7 +46,7 @@ export class TicketsPage implements OnInit {
         return;
       }
 
-      const selectedStatus = statusMap[this.status] ?? 'em-aberto';
+      const selectedStatus = statusMap[this.status] ?? 'novo';
       const { data, error } = await this.supabaseService.getTickets(selectedStatus);
 
       if (error) {

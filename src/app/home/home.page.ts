@@ -37,10 +37,10 @@ export class HomePage implements OnInit {
       route: '/tickets/todos',
     },
     {
-      title: 'Tickets abertos',
+      title: 'Tickets novos',
       icon: 'alert-circle-outline',
       count: 0,
-      route: '/tickets/abertos',
+      route: '/tickets/novos',
     },
     {
       title: 'Tickets em andamento',
@@ -66,12 +66,12 @@ export class HomePage implements OnInit {
 
       this.menuOptions = this.menuOptions.map(option => {
         if (option.title === 'Todos os tickets') {
-          const total = (counts['abertos'] ?? 0) + (counts['emAndamento'] ?? 0) + (counts['fechados'] ?? 0);
+          const total = (counts['novos'] ?? 0) + (counts['emAndamento'] ?? 0) + (counts['fechados'] ?? 0);
           return { ...option, count: total };
         }
 
-        if (option.title === 'Tickets abertos') {
-          return { ...option, count: counts['abertos'] };
+        if (option.title === 'Tickets novos') {
+          return { ...option, count: counts['novos'] };
         }
 
         if (option.title === 'Tickets em andamento') {

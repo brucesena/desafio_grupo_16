@@ -151,7 +151,7 @@ export class TicketDetailPage implements OnInit {
 
   getStatusLabel(status?: string): string {
     const map: Record<string, string> = {
-      aberto: 'Aberto',
+      novo: 'novo',
       'em-andamento': 'Em andamento',
       fechado: 'Fechado',
     };
@@ -160,7 +160,7 @@ export class TicketDetailPage implements OnInit {
 
   getStatusColor(status?: string): string {
     const map: Record<string, string> = {
-      aberto: 'warning',
+      novo: 'warning',
       'em-andamento': 'primary',
       fechado: 'success',
     };

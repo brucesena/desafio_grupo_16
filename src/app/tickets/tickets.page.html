@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      {{ status === 'todos' ? 'Todos os tickets' : status === 'abertos' ? 'Tickets abertos' : status === 'em-andamento' ? 'Tickets em andamento' : 'Tickets fechados' }}
+      {{ status === 'todos' ? 'Todos os tickets' : status === 'novos' ? 'Tickets novos' : status === 'em-andamento' ? 'Tickets em andamento' : 'Tickets fechados' }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,7 +12,7 @@
 <ion-content [fullscreen]="true" class="tickets-content">
   <div class="summary-card">
     <h2>{{ getFilteredTickets().length }} tickets</h2>
-    <p>Visualizando {{ status === 'todos' ? 'todos os tickets' : status === 'abertos' ? 'tickets abertos' : status === 'em-andamento' ? 'tickets em andamento' : 'tickets fechados' }}.</p>
+    <p>Visualizando {{ status === 'todos' ? 'todos os tickets' : status === 'novos' ? 'tickets novos' : status === 'em-andamento' ? 'tickets em andamento' : 'tickets fechados' }}.</p>
   </div>
 
   <ion-list lines="none" class="tickets-list">
