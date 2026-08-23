@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 import { environment } from '../environments/environment';
 
-export type TicketStatus = 'aberto' | 'em-andamento' | 'fechado';
+export type TicketStatus = 'em-aberto' | 'em-andamento' | 'fechado';
 
 export interface TicketRecord {
   id?: number;
@@ -84,7 +84,7 @@ export class SupabaseService {
     for (const ticket of data ?? []) {
       const status = ticket.status as TicketStatus;
 
-      if (status === 'aberto') {
+      if (status === 'em-aberto') {
         counts.abertos += 1;
       } else if (status === 'em-andamento') {
         counts.emAndamento += 1;

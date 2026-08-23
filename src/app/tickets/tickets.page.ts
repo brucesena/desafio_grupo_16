@@ -29,7 +29,7 @@ export class TicketsPage implements OnInit {
   loadTickets = async () => {
     try {
       const statusMap: Record<string, TicketStatus> = {
-        abertos: 'aberto',
+        abertos: 'em-aberto',
         'em-andamento': 'em-andamento',
         fechados: 'fechado',
       };
