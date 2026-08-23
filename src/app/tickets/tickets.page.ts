@@ -26,7 +26,7 @@ export class TicketsPage implements OnInit {
     this.loadTickets();
   }
 
-  async loadTickets() {
+  loadTickets = async () => {
     try {
       const statusMap: Record<string, TicketStatus> = {
         abertos: 'aberto',
