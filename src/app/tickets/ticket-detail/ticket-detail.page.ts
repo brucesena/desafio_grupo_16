@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 
-import { SupabaseService, TicketRecord, UsuarioRecord } from '../../supabase.service';
+import { SupabaseService, TicketRecord, TicketStatus, UsuarioRecord } from '../../supabase.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -21,6 +21,14 @@ export class TicketDetailPage implements OnInit {
 
   public ticket: TicketRecord | null = null;
   public isLoading = true;
+  public statusSelecionado: TicketStatus = 'novo';
+
+  public statusOptions: { value: TicketStatus; label: string }[] = [
+    { value: 'novo', label: 'Novo' },
+    { value: 'em-andamento', label: 'Em andamento' },
+    { value: 'encaminhado-manutencao', label: 'Encaminhado para manutenção' },
+    { value: 'concluido', label: 'Concluído' },
+  ];
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -37,8 +45,27 @@ export class TicketDetailPage implements OnInit {
       await this.showToast('Erro ao carregar ticket.', 'danger');
     } else {
       this.ticket = data;
+      this.statusSelecionado = (data?.status as TicketStatus) ?? 'novo';
     }
     this.isLoading = false;
+  }
+
+  async alterarStatus(event: any) {
+    const novoStatus = event.detail.value as TicketStatus;
+    if (!this.ticket?.id || novoStatus === this.ticket.status) return;
+
+    const loading = await this.showLoading('Atualizando status...');
+    const { error } = await this.supabaseService.updateTicketStatus(this.ticket.id, novoStatus);
+    loading.dismiss();
+
+    if (error) {
+      // Reverte o select visualmente
+      this.statusSelecionado = (this.ticket.status as TicketStatus) ?? 'novo';
+      await this.showToast('Erro ao atualizar status.', 'danger');
+    } else {
+      this.ticket = { ...this.ticket, status: novoStatus };
+      await this.showToast('Status atualizado com sucesso!', 'success');
+    }
   }
 
   // ─── Comentar ───────────────────────────────────────────────────────────────
@@ -105,12 +132,13 @@ export class TicketDetailPage implements OnInit {
   private async encerrarTicket() {
     if (!this.ticket?.id) return;
     const loading = await this.showLoading('Encerrando ticket...');
-    const { error } = await this.supabaseService.updateTicketStatus(this.ticket.id, 'fechado');
+    const { error } = await this.supabaseService.updateTicketStatus(this.ticket.id, 'concluido');
     loading.dismiss();
     if (error) {
       await this.showToast('Erro ao encerrar ticket.', 'danger');
     } else {
-      this.ticket = { ...this.ticket, status: 'fechado' };
+      this.ticket = { ...this.ticket, status: 'concluido' };
+      this.statusSelecionado = 'concluido';
       await this.showToast('Ticket encerrado com sucesso!', 'success');
     }
   }
@@ -151,18 +179,20 @@ export class TicketDetailPage implements OnInit {
 
   getStatusLabel(status?: string): string {
     const map: Record<string, string> = {
-      novo: 'novo',
+      'novo': 'Novo',
       'em-andamento': 'Em andamento',
-      fechado: 'Fechado',
+      'encaminhado-manutencao': 'Encaminhado para manutenção',
+      'concluido': 'Concluído'
     };
     return map[status ?? ''] ?? status ?? '-';
   }
 
   getStatusColor(status?: string): string {
     const map: Record<string, string> = {
-      novo: 'warning',
+      'novo': 'warning',
       'em-andamento': 'primary',
-      fechado: 'success',
+      'encaminhado-manutencao': 'tertiary',
+      'concluido': 'success'
     };
     return map[status ?? ''] ?? 'medium';
   }

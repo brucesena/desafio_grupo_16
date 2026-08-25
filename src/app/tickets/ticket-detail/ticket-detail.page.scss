@@ -170,3 +170,11 @@
     font-size: 1rem;
   }
 }
+
+// Select de status
+.status-select {
+  --placeholder-color: var(--ion-color-dark);
+  font-weight: 500;
+  font-size: 0.95rem;
+  max-width: 100%;
+}

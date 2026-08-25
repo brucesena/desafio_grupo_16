@@ -31,7 +31,7 @@ export class TicketsPage implements OnInit {
       const statusMap: Record<string, TicketStatus> = {
         novos: 'novo',
         'em-andamento': 'em-andamento',
-        fechados: 'fechado',
+        fechados: 'concluido',
       };
 
       if (this.status === 'todos') {
@@ -46,7 +46,7 @@ export class TicketsPage implements OnInit {
         return;
       }
 
-      const selectedStatus = statusMap[this.status] ?? 'novo';
+      let selectedStatus = statusMap[this.status] ?? 'novo';
       const { data, error } = await this.supabaseService.getTickets(selectedStatus);
 
       if (error) {

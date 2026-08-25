@@ -19,13 +19,6 @@
 
   <!-- Conteúdo -->
   @if (!isLoading && ticket) {
-    <!-- Badge de status -->
-    <div class="status-banner">
-      <ion-badge [color]="getStatusColor(ticket.status)" class="status-badge">
-        {{ getStatusLabel(ticket.status) }}
-      </ion-badge>
-    </div>
-
     <!-- Informações do ticket -->
     <ion-card class="info-card">
       <ion-card-header>
@@ -35,6 +28,25 @@
 
       <ion-card-content>
         <ion-list lines="none" class="detail-list">
+
+          <!-- Select de status -->
+          <ion-item>
+            <ion-icon name="flag-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Status</p>
+            </ion-label>
+            <ion-select
+              [(ngModel)]="statusSelecionado"
+              (ionChange)="alterarStatus($event)"
+              interface="action-sheet"
+              [selectedText]="getStatusLabel(statusSelecionado)"
+              class="status-select"
+            >
+              @for (opt of statusOptions; track opt.value) {
+                <ion-select-option [value]="opt.value">{{ opt.label }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
           <ion-item>
             <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
             <ion-label>
@@ -92,10 +104,10 @@
         <button
           class="action-btn action-btn--close"
           (click)="confirmarEncerramento()"
-          [disabled]="ticket.status === 'fechado'"
+          [disabled]="ticket.status === 'concluido'"
         >
           <ion-icon name="checkmark-done-outline"></ion-icon>
-          <span>{{ ticket.status === 'fechado' ? 'Ticket encerrado' : 'Encerrar ticket' }}</span>
+          <span>{{ ticket.status === 'concluido' ? 'Ticket concluído' : 'Encerrar ticket' }}</span>
         </button>
 
       </div>
