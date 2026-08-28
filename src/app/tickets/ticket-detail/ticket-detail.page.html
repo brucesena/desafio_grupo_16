@@ -66,9 +66,12 @@
           <ion-item>
             <ion-icon name="headset-outline" slot="start" color="primary"></ion-icon>
             <ion-label>
-              <p class="field-label">Atendente</p>
-              <h3>{{ ticket.atendente_id != null ? 'Atendente #' + ticket.atendente_id : 'Sem atendente' }}</h3>
+              <p class="field-label">Responsável</p>
+              <h3>{{ ticket.atendente?.nome ?? (ticket.atendente_id != null ? 'Atendente #' + ticket.atendente_id : 'Sem responsável') }}</h3>
             </ion-label>
+            @if (jaEResponsavel) {
+              <ion-badge color="success" slot="end">Você</ion-badge>
+            }
           </ion-item>
 
           <ion-item>
@@ -82,16 +85,72 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- Seção de comentários -->
+    <div class="comments-section">
+      <h2 class="section-title">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        Comentários
+        <ion-badge color="medium">{{ comentarios.length }}</ion-badge>
+      </h2>
+
+      <!-- Lista de comentários -->
+      @if (isLoadingComentarios) {
+        <div class="comments-loading">
+          <ion-spinner name="crescent" color="medium"></ion-spinner>
+        </div>
+      }
+
+      @if (!isLoadingComentarios && comentarios.length === 0) {
+        <p class="no-comments">Nenhum comentário ainda.</p>
+      }
+
+      @for (c of comentarios; track c.id) {
+        <div class="comment-bubble">
+          <div class="comment-header">
+            <span class="comment-author">{{ c.atendente?.nome ?? 'Atendente' }}</span>
+            <span class="comment-date">{{ c.created_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <p class="comment-text">{{ c.comentario }}</p>
+        </div>
+      }
+
+      <!-- Input novo comentário -->
+      <div class="comment-input-row">
+        <textarea
+          class="comment-textarea"
+          placeholder="Escreva um comentário..."
+          [(ngModel)]="novoComentario"
+          rows="2"
+        ></textarea>
+        <button
+          class="btn-send"
+          (click)="enviarComentario()"
+          [disabled]="isSalvandoComentario"
+          aria-label="Enviar comentário"
+        >
+          @if (isSalvandoComentario) {
+            <ion-spinner name="crescent" color="light"></ion-spinner>
+          } @else {
+            <ion-icon name="send-outline"></ion-icon>
+          }
+        </button>
+      </div>
+    </div>
+
     <!-- Botões de ação -->
     <div class="actions-section">
       <h2 class="actions-title">Ações</h2>
 
       <div class="action-buttons">
 
-        <!-- Comentar -->
-        <button class="action-btn action-btn--comment" (click)="abrirComentario()">
-          <ion-icon name="chatbubble-outline"></ion-icon>
-          <span>Comentar</span>
+        <!-- Assumir ticket -->
+        <button
+          class="action-btn action-btn--assume"
+          (click)="assumirTicket()"
+          [disabled]="jaEResponsavel"
+        >
+          <ion-icon name="person-add-outline"></ion-icon>
+          <span>{{ jaEResponsavel ? 'Você é o responsável' : 'Assumir ticket' }}</span>
         </button>
 
         <!-- Contatar usuário -->

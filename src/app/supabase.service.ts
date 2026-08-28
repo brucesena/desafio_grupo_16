@@ -14,6 +14,7 @@ export interface TicketRecord {
   nome_cliente?: string;
   telefone_cliente?: string;
   atendente_id?: number | null;
+  atendente?: { id?: number; nome?: string };
 }
 
 export interface UsuarioRecord {
@@ -30,6 +31,15 @@ export interface AtendenteRecord {
   senha?: string;
   telefone?: string;
   criado_em?: string;
+}
+
+export interface ComentarioRecord {
+  id?: number;
+  created_at?: string;
+  ticket_id?: number;
+  atendente_id?: number;
+  comentario?: string;
+  atendente?: { nome?: string };
 }
 
 @Injectable({
@@ -96,7 +106,11 @@ export class SupabaseService {
   }
 
   getTicketById(id: number) {
-    return this.supabase.from('ticket').select('*').eq('id', id).single();
+    return this.supabase
+      .from('ticket')
+      .select('*, atendente(id, nome)')
+      .eq('id', id)
+      .single();
   }
 
   updateTicketStatus(id: number, status: TicketStatus) {
@@ -107,8 +121,20 @@ export class SupabaseService {
     return this.supabase.from('ticket').update({ atendente_id }).eq('id', id);
   }
 
-  addComment(ticketId: number, comentario: string) {
-    return this.supabase.from('comentarios').insert([{ ticket_id: ticketId, texto: comentario }]);
+  addComment(ticketId: number, atendenteId: number, texto: string) {
+    return this.supabase
+      .from('comentario')
+      .insert([{ ticket_id: ticketId, atendente_id: atendenteId, comentario: texto }])
+      .select('*, atendente(nome)')
+      .single();
+  }
+
+  getComments(ticketId: number) {
+    return this.supabase
+      .from('comentario')
+      .select('*, atendente(nome)')
+      .eq('ticket_id', ticketId)
+      .order('created_at', { ascending: true });
   }
 
   async cadastrarAtendente(atendente: Pick<AtendenteRecord, 'nome' | 'email' | 'senha' | 'telefone'>) {
@@ -119,8 +145,7 @@ export class SupabaseService {
     const { data } = await this.supabase
       .from('atendente')
       .select('id')
-      .eq('email', email)
-      .single();
+      .eq('email', email).single();
     return !!data;
   }
 

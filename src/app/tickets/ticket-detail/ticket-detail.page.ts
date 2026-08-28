@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 
-import { SupabaseService, TicketRecord, TicketStatus, UsuarioRecord } from '../../supabase.service';
+import { SupabaseService, TicketRecord, TicketStatus, UsuarioRecord, ComentarioRecord } from '../../supabase.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -15,12 +16,17 @@ export class TicketDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private supabaseService = inject(SupabaseService);
+  private authService = inject(AuthService);
   private alertCtrl = inject(AlertController);
   private loadingCtrl = inject(LoadingController);
   private toastCtrl = inject(ToastController);
 
   public ticket: TicketRecord | null = null;
+  public comentarios: ComentarioRecord[] = [];
+  public novoComentario = '';
   public isLoading = true;
+  public isLoadingComentarios = false;
+  public isSalvandoComentario = false;
   public statusSelecionado: TicketStatus = 'novo';
 
   public statusOptions: { value: TicketStatus; label: string }[] = [
@@ -46,8 +52,18 @@ export class TicketDetailPage implements OnInit {
     } else {
       this.ticket = data;
       this.statusSelecionado = (data?.status as TicketStatus) ?? 'novo';
+      await this.loadComentarios(id);
     }
     this.isLoading = false;
+  }
+
+  async loadComentarios(ticketId: number) {
+    this.isLoadingComentarios = true;
+    const { data, error } = await this.supabaseService.getComments(ticketId);
+    if (!error) {
+      this.comentarios = (data as ComentarioRecord[]) ?? [];
+    }
+    this.isLoadingComentarios = false;
   }
 
   async alterarStatus(event: any) {
@@ -56,10 +72,22 @@ export class TicketDetailPage implements OnInit {
 
     const loading = await this.showLoading('Atualizando status...');
     const { error } = await this.supabaseService.updateTicketStatus(this.ticket.id, novoStatus);
+
+    if (!error && novoStatus === 'em-andamento') {
+      const atendente = this.authService.getAtendente();
+      if (atendente?.id) {
+        await this.supabaseService.updateTicketAtendente(this.ticket.id, atendente.id);
+        this.ticket = {
+          ...this.ticket,
+          atendente_id: atendente.id,
+          atendente: { id: atendente.id, nome: atendente.nome },
+        };
+      }
+    }
+
     loading.dismiss();
 
     if (error) {
-      // Reverte o select visualmente
       this.statusSelecionado = (this.ticket.status as TicketStatus) ?? 'novo';
       await this.showToast('Erro ao atualizar status.', 'danger');
     } else {
@@ -70,45 +98,79 @@ export class TicketDetailPage implements OnInit {
 
   // ─── Comentar ───────────────────────────────────────────────────────────────
 
-  async abrirComentario() {
+  async enviarComentario() {
+    const texto = this.novoComentario.trim();
+    if (!texto) {
+      await this.showToast('O comentário não pode estar vazio.', 'warning');
+      return;
+    }
+
+    const atendenteId = this.authService.getAtendente()?.id;
+    if (!atendenteId || !this.ticket?.id) return;
+
+    this.isSalvandoComentario = true;
+    const { data, error } = await this.supabaseService.addComment(
+      this.ticket.id,
+      atendenteId,
+      texto,
+    );
+    this.isSalvandoComentario = false;
+
+    if (error) {
+      console.error('Erro ao salvar comentário:', JSON.stringify(error));
+      await this.showToast(`Erro: ${error?.message ?? 'desconhecido'}`, 'danger');
+    } else {
+      this.novoComentario = '';
+      this.comentarios = [...this.comentarios, data as ComentarioRecord];
+      await this.showToast('Comentário adicionado!', 'success');
+    }
+  }
+
+  get jaEResponsavel(): boolean {
+    const meuId = this.authService.getAtendente()?.id;
+    return !!meuId && this.ticket?.atendente_id === meuId;
+  }
+
+  async assumirTicket() {
+    const atendente = this.authService.getAtendente();
+    if (!atendente?.id || !this.ticket?.id) return;
+
+    const jaTemResponsavel = this.ticket.atendente_id != null;
+    const nomeAtual = this.ticket.atendente?.nome;
+
+    const mensagem = jaTemResponsavel
+      ? `Este ticket está atribuído a ${nomeAtual ?? 'outro atendente'}. Deseja assumir a responsabilidade?`
+      : 'Deseja assumir a responsabilidade por este ticket?';
+
     const alert = await this.alertCtrl.create({
-      header: 'Adicionar comentário',
-      inputs: [
-        {
-          name: 'comentario',
-          type: 'textarea',
-          placeholder: 'Digite seu comentário...',
-        },
-      ],
+      header: 'Assumir ticket',
+      message: mensagem,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
-          text: 'Enviar',
-          handler: async (data) => {
-            const texto = data.comentario?.trim();
-            if (!texto) {
-              await this.showToast('O comentário não pode estar vazio.', 'warning');
-              return false;
+          text: 'Assumir',
+          handler: async () => {
+            const loading = await this.showLoading('Assumindo ticket...');
+            const { error } = await this.supabaseService.updateTicketAtendente(
+              this.ticket!.id!,
+              atendente.id!,
+            );
+            loading.dismiss();
+            if (error) {
+              await this.showToast('Erro ao assumir ticket.', 'danger');
+            } else {
+              this.ticket = {
+                ...this.ticket!,
+                atendente_id: atendente.id,
+                atendente: { id: atendente.id, nome: atendente.nome },
+              };
+              await this.showToast('Ticket assumido com sucesso!', 'success');
             }
-            await this.salvarComentario(texto);
-            return true;
           },
         },
       ],
     });
     await alert.present();
-  }
-
-  private async salvarComentario(texto: string) {
-    if (!this.ticket?.id) return;
-    const loading = await this.showLoading('Salvando comentário...');
-    const { error } = await this.supabaseService.addComment(this.ticket.id, texto);
-    loading.dismiss();
-    if (error) {
-      await this.showToast('Erro ao salvar comentário.', 'danger');
-    } else {
-      await this.showToast('Comentário adicionado com sucesso!', 'success');
-    }
   }
 
   // ─── Encerrar ────────────────────────────────────────────────────────────────
