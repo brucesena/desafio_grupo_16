@@ -11,10 +11,14 @@ export interface TicketRecord {
   titulo?: string;
   categoria?: string;
   status?: TicketStatus;
-  nome_cliente?: string;
+  nome_cadastrado_pelo_suporte?: string;
   telefone_cliente?: string;
   atendente_id?: number | null;
   atendente?: { id?: number; nome?: string };
+  marca_equipamento?: string;
+  modelo_equipamento?: string;
+  equipamento_novo_ou_antigo?: string;
+  descricao_problema?: string;
 }
 
 export interface UsuarioRecord {
@@ -71,10 +75,10 @@ export class SupabaseService {
   }
 
   getTickets(status?: TicketStatus) {
-    if (status){
-      return this.supabase.from('ticket').select('*').eq('status', status).order('created_at');
+    if (status) {
+      return this.supabase.from('ticket').select('*, atendente(id, nome)').eq('status', status).order('created_at');
     }
-    return this.supabase.from('ticket').select('*').order('created_at');
+    return this.supabase.from('ticket').select('*, atendente(id, nome)').order('created_at');
   }
 
   async getTicketCounts(): Promise<Record<string, number>> {

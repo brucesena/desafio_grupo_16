@@ -51,7 +51,7 @@
             <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
             <ion-label>
               <p class="field-label">Cliente</p>
-              <h3>{{ ticket.nome_cliente || 'Sem nome' }}</h3>
+              <h3>{{ ticket.nome_cadastrado_pelo_suporte || 'Sem nome' }}</h3>
             </ion-label>
           </ion-item>
 
@@ -81,6 +81,38 @@
               <h3>{{ ticket.created_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
             </ion-label>
           </ion-item>
+
+          <ion-item>
+            <ion-icon name="construct-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Marca do equipamento</p>
+              <h3>{{ ticket.marca_equipamento || 'Não informado' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="hardware-chip-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Modelo do equipamento</p>
+              <h3>{{ ticket.modelo_equipamento || 'Não informado' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="time-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="field-label">Equipamento</p>
+              <h3>{{ ticket.equipamento_novo_ou_antigo || 'Não informado' }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item class="descricao-item">
+              <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
+              <ion-label>
+                <p class="field-label">Descrição do problema</p>
+                <p class="descricao-texto">{{ ticket.descricao_problema || 'N/A' }}</p>
+              </ion-label>
+            </ion-item>
         </ion-list>
       </ion-card-content>
     </ion-card>
