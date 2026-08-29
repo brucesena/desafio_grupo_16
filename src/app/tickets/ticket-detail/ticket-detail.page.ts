@@ -216,7 +216,7 @@ export class TicketDetailPage implements OnInit {
 
     const alert = await this.alertCtrl.create({
       header: 'Contatar usuário',
-      message: `Como deseja contatar ${this.ticket?.nome_cliente ?? 'o cliente'}?`,
+      message: `Como deseja contatar ${this.ticket?.nome_cadastrado_pelo_suporte ?? 'o cliente'}?`,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
