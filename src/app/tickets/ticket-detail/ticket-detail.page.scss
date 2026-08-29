@@ -320,3 +320,20 @@
     background: #f3e8fd;
     color: #7b1fa2;
   }
+
+.descricao-item {
+  --inner-padding-bottom: 12px;
+  align-items: flex-start;
+
+  ion-icon {
+    margin-top: 4px;
+  }
+}
+
+.descricao-texto {
+  font-size: 0.95rem;
+  color: var(--ion-color-dark);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  margin-top: 4px;
+}

@@ -15,6 +15,10 @@ export interface TicketRecord {
   telefone_cliente?: string;
   atendente_id?: number | null;
   atendente?: { id?: number; nome?: string };
+  marca_equipamento?: string;
+  modelo_equipamento?: string;
+  equipamento_novo_ou_antigo?: string;
+  descricao_problema?: string;
 }
 
 export interface UsuarioRecord {
