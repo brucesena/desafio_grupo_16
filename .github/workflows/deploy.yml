@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npx ng build --configuration production --base-href /desafio_grupo_16/
+        run: npx ng build --configuration production --base-href /cases_notify/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
